@@ -1,0 +1,22 @@
+Расшифровка LUKS разделов.
+
+Загружаемся с LiveCD, например с установочного диска убунты.
+
+lsblk
+blkid
+
+cryptsetup-reencrypt --decrypt /dev/sdaX
+run into mount: unknown filesystem type 'LVM2_member' do the commands below
+vgchange -ay
+vgdisplay
+lvscan
+
+mount /dev/mapper/srv--vpn01--main--vg-rootsda3 /mnt
+mount -t proc none /mnt/proc
+mount -o bind /sys /mnt/sys
+mount -o bind /dev /mnt/dev
+mount /dev/sda1 /mnt/boot
+chroot /mnt /bin/bash
+rm /etc/crypttab
+apt-get remove --purge cryptsetup
+update-initramfs -u -k all
