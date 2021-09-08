@@ -32,4 +32,4 @@ Ob8VZRzI9neWagqNdwvYkQsEjgfbKbYK7p2CNTUQ
 cp -y privkey.pem /opt/zimbra/ssl/zimbra/commercial/commercial.key && /opt/zimbra/bin/zmcertmgr verifycrt comm privkey.pem cert.pem chain.pem && /opt/zimbra/bin/zmcertmgr deploycrt comm cert.pem chain.pem && zmcontrol restart
 
 Проверяем сертификат на порту:
-echo | openssl s_client -servername mail.offenso.ru -connect 192.168.10.217:465 2>/dev/null | openssl x509 -noout -dates
+echo | openssl s_client -servername mail.example.com -connect 192.168.10.217:465 2>/dev/null | openssl x509 -noout -dates
