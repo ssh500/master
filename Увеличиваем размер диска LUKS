@@ -1,0 +1,7 @@
+Увеличиваем размер диска на fs1:
+
+Офлайн.
+umount /dev/mapper/sdb_crypt && cryptsetup --verbose resize sdb_crypt && mount /dev/mapper/sdb_crypt /mnt/data -o acl,usrquota,grpquota,suid,dev,exec,relatime && resize2fs /dev/mapper/sdb_crypt && df -h /mnt/data/
+
+Расширить диск онлайн.
+partprobe; cryptsetup --verbose resize sdb_crypt && resize2fs /dev/mapper/sdb_crypt; df -h /mnt/data/folders/
