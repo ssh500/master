@@ -1,0 +1,93 @@
+cat /etc/nginx/stream/stream.conf 
+#worker_processes auto;
+error_log /var/log/nginx/error.log info;
+
+		upstream tcp_465 {
+			server 1.1.1.1:465 max_fails=2 fail_timeout=10s;
+			server 2.2.2.2:465 backup;
+}
+		server {
+			listen 465;
+			proxy_pass tcp_465;
+}
+
+		upstream tcp_587 {
+			server 1.1.1.1:587 max_fails=2 fail_timeout=10s;
+			server 2.2.2.2:587 backup;
+}
+		server {
+			listen 587;
+			proxy_pass tcp_587;
+}
+
+
+		upstream tcp_995 {
+			server 1.1.1.1:995 max_fails=2 fail_timeout=10s;
+			server 2.2.2.2:995 backup;
+}
+		server {
+			listen 995;
+			proxy_pass tcp_995;
+}
+
+
+		upstream tcp_993 {
+			server 1.1.1.1:993 max_fails=2 fail_timeout=10s;
+			server 2.2.2.2:993 backup;
+}
+		server {
+			listen 993;
+			proxy_pass tcp_993;
+}
+
+
+cat /etc/nginx/sites-enabled/https.conf 
+upstream http_proxy {
+server 1.1.1.1:80 max_fails=2 fail_timeout=10s;
+server 1.1.1.1:80 backup;
+}
+
+server {
+listen 80;
+server_name mail.example.com example.com;
+access_log /var/log/nginx/access-proxy.log;
+error_log /var/log/nginx/error-proxy.log;
+
+location / {
+proxy_pass http://http_proxy;
+proxy_next_upstream error timeout http_500 http_404 http_502;
+proxy_read_timeout 15;
+proxy_connect_timeout 3;
+include proxy_params;
+}
+}
+
+upstream https_proxy {
+server 1.1.1.1:443 max_fails=2 fail_timeout=10s;
+server 2.2.2.2:443 backup;
+}
+
+server {
+listen 443 ssl http2;
+server_name mail.example.com example.com;
+access_log /var/log/nginx/access-proxy.log;
+error_log /var/log/nginx/error-proxy.log;
+
+#ssl on;
+ssl_certificate /etc/nginx/ssl/mail.example.com/fullchain.pem;
+ssl_certificate_key /etc/nginx/ssl/mail.example.com/privkey.pem;
+ssl_session_timeout 5m;
+ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+ssl_dhparam /etc/nginx/ssl/dh2048.pem;
+ssl_ciphers 'EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH';
+ssl_prefer_server_ciphers on;
+ssl_session_cache shared:SSL:10m;
+
+location / {
+proxy_pass https://https_proxy;
+proxy_next_upstream error timeout http_500 http_404 http_502;
+proxy_read_timeout 15;
+proxy_connect_timeout 3;
+include proxy_params;
+}
+}
