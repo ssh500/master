@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+deps='
+libawl-php/stable,stable 0.60-1+deb10u1 all [upgradable from: 0.57-1+deb9u1]
+php/stable 2:7.3+69 all [upgradable from: 1:7.0+49]
+php-common/stable 2:69 all [upgradable from: 1:49]
+php-curl/stable 2:7.3+69 all [upgradable from: 1:7.0+49]
+php-fpm/stable 2:7.3+69 all [upgradable from: 1:7.0+49]
+php-mbstring/stable 2:7.3+69 all [upgradable from: 1:7.0+49]
+php-mysql/stable 2:7.3+69 all [upgradable from: 1:7.0+49]
+php-pgsql/stable 2:7.3+69 all [upgradable from: 1:7.0+49]
+php-xml/stable 2:7.3+69 all [upgradable from: 1:7.0+49]
+libyaml-libyaml-perl/stable 0.76+repack-1 amd64 [upgradable from: 0.63-2]
+libyaml-perl/stable 1.27-1 all [upgradable from: 1.21-1]
+libdbd-mysql-perl/stable 4.050-2 amd64 [upgradable from: 4.041-2]
+libdbi-perl/stable 1.642-1+deb10u2 amd64 [upgradable from: 1.636-1+deb9u1]
+davical/stable,stable 1.1.8-1+deb10u1 all [upgradable from: 1.1.5-1+deb9u1]'
+
+
+echo 'deb http://security.debian.org/ buster/updates main
+deb-src http://security.debian.org/ buster/updates main
+
+deb http://mirror.yandex.ru/debian buster main
+deb-src http://mirror.yandex.ru/debian buster main
+
+deb http://mirror.yandex.ru/debian buster main
+deb-src http://mirror.yandex.ru/debian buster main
+' > /etc/apt/sources.list
+
+
+(
+        IFS=$'\n'
+        for i in ${deps[@]}; do
+                pack=`echo "$i" | awk -F '/' '{print$1}'`
+                apt-mark hold "$pack"
+        done
+)
+
+
+# apt update && apt upgrade && apt dist-upgrade - УЖЕ ВРУЧНУЮ
