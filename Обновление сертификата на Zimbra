@@ -1,3 +1,5 @@
+certbot -d mail.example.com --manual --preferred-challenges dns certonly
+
 Обновление сертификата на Zimbra
 
 Add:
