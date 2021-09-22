@@ -1,0 +1,44 @@
+cat /etc/systemd/system/switch.service 
+[Unit]
+Description=Switch ip address in nginx site config file
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/root/switch.sh
+ExecStop=/usr/bin/pkill -f switch.sh
+
+[Install]
+WantedBy=multi-user.target
+
+
+systemctl daemon-reload
+
+cat /root/switch.sh 
+#!/usr/bin/env bash
+
+isp1_gw='1.1.1.1'
+isp2_gw='2.2.2.2'
+
+while true; do
+        printf "Start ping\n"
+        if ! ping -c 30 -W 1 8.8.8.8 > /dev/null; then
+                printf "Ping FAIL, change dault gateway\n"
+                if ip route | grep "default via $isp2_gw"; then
+                        ip route change default via "$isp1_gw_gw"
+                        printf "Default gateway changed to isp1_gw_gw\n"
+                        /etc/iptables.isp1.sh  # change iptables rules
+                        aws route53 change-resource-record-sets --hosted-zone-id Z2NT49LEU2TW3P --change-batch file://root/isp1.json
+                        continue
+                fi
+                if ip route | grep "default via $isp1_gw"; then
+                        ip route change default via "$isp2_gw"
+                        printf "Default gateway changed to isp2_gw\n"
+                        /etc/iptables.isp2.sh  # change iptables rules
+                        aws route53 change-resource-record-sets --hosted-zone-id Z2NT49LEU2TW3P --change-batch file://root/isp2.json
+                        continue
+                fi
+        fi
+done
+
+
