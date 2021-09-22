@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+if ! pgrep mail ; then
+	mail -s "Unattended upgrades" admin@mail.example.com help1@mail.example.com help2@mail.example.com  < /var/log/unattended-upgrades/unattended-upgrades.log
+fi
