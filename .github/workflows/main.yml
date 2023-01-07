@@ -29,6 +29,12 @@ jobs:
         echo "Application name: ${{ env.APPLICATION_NAME }}"
         
     - name: List current folder.
+      run: ls -lah   
+        
+    - name: Git clone my repo.
+      run: git clone https://github.com/ssh500/master.git
+      
+    - name: List current folder.
       run: ls -lah  
   
   my_deploy:
@@ -41,3 +47,9 @@ jobs:
  
     - name: Printing Deployment package
       run: echo "Deploy package name is ${{ env.DEPLOY_PACKAGE_NAME }}"
+      
+    - name: Let's check some packages if they are here.
+      run : aws --version
+      
+    - name: Let's check git version
+      run: git --version
