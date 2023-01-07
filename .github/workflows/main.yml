@@ -25,7 +25,7 @@ jobs:
     - name: Execurse few commands
       run: |
         echo "Message1"
-        echo "Message2""
+        echo "Message2"
         echo "Application name: ${{ env.APPLICATION_NAME }}"
         
     - name: List current folder.
