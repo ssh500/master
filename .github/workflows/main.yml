@@ -1,0 +1,29 @@
+ #-------------------------------
+ # GitHub Actions
+ #
+ # Copyleft (c) by ssh500 2023.
+ #-------------------------------
+ 
+name: My-GithubActions-Basics
+ 
+on: 
+   push:
+     branches:
+      - master
+       
+jobs: 
+  my_testing:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Print hello message.
+      run: echo "Hello World from Testing job."
+  
+   
+  
+  my_deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Print hello message.
+      run: echo "Hello World from Deploy job."
+ 
+ 
